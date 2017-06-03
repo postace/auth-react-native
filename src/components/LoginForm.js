@@ -4,7 +4,7 @@ import { Card, Button, CardSection, Input } from './common';
 export default class LoginForm extends Component {
 
   state = {
-    text: ''
+    email: ''
   };
 
   /*By default, text input will not have any width, height*/
@@ -13,9 +13,10 @@ export default class LoginForm extends Component {
       <Card>
         <CardSection>
           <Input
+            placeholder="user@gmail.com"
             label="Email"
-            value={this.state.text}
-            onChangeText={text => this.setState({text: text})}
+            value={this.state.email}
+            onChangeText={email => this.setState({ email })}
           />
         </CardSection>
 
