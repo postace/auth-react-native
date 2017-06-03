@@ -1,12 +1,29 @@
 import React, { Component } from 'react';
+import {Text} from 'react-native';
+import firebase from 'firebase';
 import { Card, Button, CardSection, Input } from './common';
 
 export default class LoginForm extends Component {
 
   state = {
     email: '',
-    password: ''
+    password: '',
+    error: ''
   };
+
+  onButtonPress() {
+    const { email, password } = this.state;
+
+    this.setState({error: ''});
+
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .catch(() => {
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+          .catch(() => {
+            this.setState({error: 'Authentication Failed!'});
+          });
+      });
+  }
 
   /*By default, text input will not have any width, height*/
   render() {
@@ -23,7 +40,7 @@ export default class LoginForm extends Component {
 
         <CardSection>
           <Input
-          secureTextEntry
+            secureTextEntry
             placeholder="password"
             label="Password"
             value={this.state.password}
@@ -31,12 +48,24 @@ export default class LoginForm extends Component {
           />
         </CardSection>
 
+        <Text style={styles.errorTextStyle}>
+          {this.state.error}
+        </Text>
+
         <CardSection>
-          <Button>
+          <Button onPress={this.onButtonPress.bind(this)}>
             Login
           </Button>
         </CardSection>
       </Card>
     );
+  }
+}
+
+const styles = {
+  errorTextStyle: {
+    fontSize: 20,
+    alignSelf: 'center',
+    color: 'red'
   }
 }
